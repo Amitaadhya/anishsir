@@ -3,249 +3,972 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Anish Sir</title>
+    <title>Vendor Task Manager</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap');
-        
         :root {
-            --primary: #3b82f6;
-            --secondary: #f59e0b;
+            --primary-color: #3b82f6; /* Blue-500 */
         }
-        
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #f8fafc;
-            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background: #111827; /* Dark Gray-900 */
+            color: #d1d5db; /* Gray-300 */
         }
-        
-        .title-font {
-            font-family: 'Pacifico', cursive;
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
         }
-        
-        .slide {
-            min-height: 100vh;
-            width: 100vw;
-            padding: 2rem;
+        .sidebar {
+            width: 250px;
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 72px;
+        }
+        .sidebar.collapsed .nav-text {
             display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: all 0.5s ease;
-            position: relative;
         }
-        
-        .active-slide {
-            display: flex;
-            animation: fadeIn 1s;
+        .main-content-area {
+            margin-left: 250px;
+            transition: margin-left 0.3s ease;
         }
-        
-        .birthday-card {
-            background: white;
+        .main-content-area.expanded {
+            margin-left: 72px;
+        }
+        .task-priority-low { background-color: #10b981; } /* Green */
+        .task-priority-medium { background-color: #f59e0b; } /* Orange */
+        .task-priority-high { background-color: #ef4444; } /* Red */
+        .overdue-task {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+        }
+        .modal {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #4b5563;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            padding: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .balloon {
-            position: absolute;
-            width: 40px;
-            height: 60px;
-            border-radius: 50%;
-            animation: float 4s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            animation: confettiFall 5s linear forwards;
-        }
-        
-        @keyframes confettiFall {
-            0% { 
-                transform: translateY(-100vh) rotate(0deg); 
-                opacity: 1;
-            }
-            100% { 
-                transform: translateY(100vh) rotate(360deg); 
-                opacity: 1;
-            }
-        }
-        
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            padding: 1rem;
-            text-align: center;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(5px);
+            border: 2px solid #1f2937;
         }
     </style>
 </head>
-<body>
-    <!-- Slide 1: Cover -->
-    <div class="slide active-slide">
-        <div class="birthday-card">
-            <img src="https://i.postimg.cc/g07QV872/Screenshot-2025-07-12-102927.png" alt="Colorful birthday celebration" class="mb-6 rounded-lg shadow-md mx-auto" />
-            <h1 class="title-font text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 mb-4">
-                Happy Birthday
-            </h1>
-            <h2 class="text-3xl md:text-5xl font-bold text-gray-800 mb-6">
-                Anish Sir!
-            </h2>
-            <p class="text-xl text-gray-600 mb-8">
-                Wishing you a day filled with happiness and joy!
-            </p>
-        </div>
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-            <div class="balloon bg-blue-400" style="left: 10%; top: 20%"></div>
-            <div class="balloon bg-red-400" style="left: 30%; top: 30%; animation-delay: 0.5s"></div>
-            <div class="balloon bg-yellow-400" style="left: 50%; top: 25%; animation-delay: 1s"></div>
-            <div class="balloon bg-green-400" style="left: 70%; top: 35%; animation-delay: 1.5s"></div>
-            <div class="balloon bg-purple-400" style="left: 90%; top: 20%; animation-delay: 2s"></div>
-        </div>
-    </div>
-    
-    <!-- Slide 2: Wish -->
-    <div class="slide">
-        <div class="birthday-card">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                To Anish Sir,
-            </h1>
-            <div class="prose prose-lg text-left text-gray-700 max-w-2xl">
-                <p class="mb-4">
-                    On your special day, we want to express our heartfelt gratitude for your guidance, patience, and dedication.
-                </p>
-                <p class="mb-4">
-                    Your wisdom and knowledge have shaped us into better individuals, and your kindness has made learning a joyous journey.
-                </p>
-                <p class="font-semibold text-blue-600">
-                    May this year bring you good health, happiness, and more success in all your endeavors!
-                </p>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Slide 3: Celebration -->
-    <div class="slide">
-        <div class="birthday-card">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                Let's Celebrate!
-            </h1>
-            <div class="mb-8">
-                <div class="inline-block px-6 py-3 bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-bold rounded-full shadow-lg transform hover:scale-105 transition-transform">
-                    Celebration Time!
+<body class="flex flex-col min-h-screen">
+    <!-- Top Navigation Bar -->
+    <header class="bg-gray-800 text-white fixed w-full top-0 z-50 shadow-lg">
+        <nav class="container mx-auto px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-8 h-8 text-blue-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    <h1 class="text-xl font-bold">Amit Task Manager</h1>
+                </div>
+                <div class="relative hidden md:block">
+                    <input type="text" id="global-search" placeholder="Search tasks..." class="w-80 pl-10 pr-4 py-2 rounded-full text-sm bg-gray-700 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
                 </div>
             </div>
-            <p class="text-xl text-gray-600">
-                Today is all about you, Sir! Enjoy every moment of your special day.
-            </p>
-            
-            <div id="confetti-container" class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"></div>
-        </div>
-    </div>
-    
-    <!-- Slide 4: Thank You -->
-    <div class="slide">
-        <div class="birthday-card">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-                Thank You For Everything
-            </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-2xl">
-                Your impact goes beyond the classroom. You've inspired us, motivated us, and helped us become better versions of ourselves.
-            </p>
-            <div class="text-4xl text-yellow-500 mb-8 animate-pulse">
-                ★★★★★
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button class="text-gray-400 hover:text-white transition-colors duration-200 p-2 rounded-full hover:bg-gray-700 relative" id="notification-bell">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span id="notification-count" class="absolute top-1 right-1 bg-red-500 text-white text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center hidden"></span>
+                    </button>
+                    <!-- Notification dropdown -->
+                    <div id="notification-dropdown" class="absolute right-0 mt-2 w-72 bg-gray-700 rounded-lg shadow-lg py-2 z-10 transition-all duration-300 transform scale-95 opacity-0 invisible origin-top-right">
+                        <div class="px-4 py-2 font-semibold text-gray-300">Notifications</div>
+                        <ul id="notification-list" class="max-h-60 overflow-y-auto scrollbar-thin"></ul>
+                        <div class="px-4 py-2 text-center text-sm">
+                            <a href="#" class="text-blue-400 hover:underline">View All</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">AKS</div>
+                        <span class="hidden md:block">Amit</span>
+                        <i class="fas fa-chevron-down text-xs hidden md:block"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-gray-700 rounded-lg shadow-lg py-2 z-10 hidden group-hover:block transition-all duration-300">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 transition-colors duration-200 rounded-lg m-1"><i class="fas fa-user-circle mr-2"></i> Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 transition-colors duration-200 rounded-lg m-1"><i class="fas fa-cog mr-2"></i> Settings</a>
+                        <div class="border-t border-gray-600 my-1"></div>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-600 transition-colors duration-200 rounded-lg m-1"><i class="fas fa-sign-out-alt mr-2"></i> Logout</a>
+                    </div>
+                </div>
             </div>
+        </nav>
+    </header>
+
+    <!-- Main Application Layout -->
+    <div class="flex flex-1 pt-16">
+        <!-- Collapsible Left Sidebar -->
+        <aside id="sidebar" class="sidebar bg-gray-800 text-gray-300 fixed h-full z-40 overflow-y-auto scrollbar-thin shadow-xl">
+            <div class="flex items-center justify-end px-4 py-4">
+                <button id="sidebar-toggle" class="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors duration-200">
+                    <i class="fas fa-bars text-lg"></i>
+                </button>
+            </div>
+            <nav class="px-2 py-4">
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200 active-link" data-section="dashboard">
+                    <i class="fas fa-home fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="all-tasks">
+                    <i class="fas fa-tasks fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">All Tasks</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="pending-tasks">
+                    <i class="fas fa-hourglass-half fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Pending Tasks</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="in-progress">
+                    <i class="fas fa-spinner fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">In Progress</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="completed-tasks">
+                    <i class="fas fa-check-circle fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Completed</span>
+                </a>
+                <div class="border-t border-gray-700 my-4"></div>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="categories">
+                    <i class="fas fa-tags fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Categories</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="calendar">
+                    <i class="fas fa-calendar-alt fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Calendar View</span>
+                </a>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="reports">
+                    <i class="fas fa-chart-bar fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Reports</span>
+                </a>
+                <div class="border-t border-gray-700 my-4"></div>
+                <a href="#" class="nav-item flex items-center p-3 my-2 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors duration-200" data-section="settings">
+                    <i class="fas fa-cog fa-lg w-8 text-center"></i>
+                    <span class="nav-text text-sm font-medium ml-3">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content-area" class="main-content-area flex-1 p-6 transition-all duration-300 overflow-y-auto scrollbar-thin">
+            <!-- This is where dynamic content will be loaded -->
+            <div id="content-container"></div>
+        </main>
+    </div>
+
+    <!-- Sticky Footer -->
+    <footer class="bg-gray-800 text-gray-400 p-4 text-center mt-auto shadow-inner z-50">
+        © 2025 Task Manager | Designed with ❤️Amit
+    </footer>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl transform transition-all duration-300 scale-95 opacity-0">
+            <div class="flex justify-between items-center p-6 border-b border-gray-700">
+                <h3 id="modal-title" class="text-xl font-semibold text-white">Add New Task</h3>
+                <button class="text-gray-400 hover:text-white text-2xl" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="task-form" class="p-6">
+                <input type="hidden" id="task-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label for="task-title" class="block text-sm font-medium text-gray-400">Title</label>
+                        <input type="text" id="task-title" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" required>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="task-description" class="block text-sm font-medium text-gray-400">Description</label>
+                        <textarea id="task-description" rows="3" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"></textarea>
+                    </div>
+                    <div>
+                        <label for="task-vendor" class="block text-sm font-medium text-gray-400">Vendor</label>
+                        <input type="text" id="task-vendor" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                    </div>
+                    <div>
+                        <label for="task-category" class="block text-sm font-medium text-gray-400">Category</label>
+                        <select id="task-category" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"></select>
+                    </div>
+                    <div>
+                        <label for="task-priority" class="block text-sm font-medium text-gray-400">Priority</label>
+                        <select id="task-priority" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="task-deadline" class="block text-sm font-medium text-gray-400">Deadline</label>
+                        <input type="date" id="task-deadline" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" required>
+                    </div>
+                    <div>
+                        <label for="task-status" class="block text-sm font-medium text-gray-400">Status</label>
+                        <select id="task-status" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="task-attachment" class="block text-sm font-medium text-gray-400">Attachment</label>
+                        <input type="file" id="task-attachment" class="mt-1 block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-gray-700 file:text-blue-400
+                        hover:file:bg-gray-600 transition-colors duration-200">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal()" class="py-2 px-6 rounded-lg text-sm font-medium text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
+                    <button type="submit" class="gradient-bg text-white py-2 px-6 rounded-lg text-sm font-medium hover:scale-105 transition-transform duration-200">Save Task</button>
+                </div>
+            </form>
         </div>
     </div>
     
-    <!-- Navigation -->
-    <div class="fixed right-6 bottom-20 flex flex-col space-y-4 z-50">
-        <button onclick="prevSlide()" class="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-        </button>
-        <button onclick="nextSlide()" class="w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-        </button>
-    </div>
-    
-    <!-- Footer -->
-    <div class="footer text-gray-600">
-        Powered by Amit Chaudhary
-    </div>
-    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[100] space-y-2"></div>
+
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
+        // Data and State
+        let tasks = [];
+        let categories = ['Marketing', 'Development', 'Finance', 'Operations'];
+        let settings = {
+            theme: 'dark',
+            notificationSound: true
+        };
         
-        function showSlide(n) {
-            slides.forEach(slide => slide.classList.remove('active-slide'));
-            slides[n].classList.add('active-slide');
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const mainContentArea = document.getElementById('main-content-area');
+        const contentContainer = document.getElementById('content-container');
+        const navItems = document.querySelectorAll('.nav-item');
+        const taskModal = document.getElementById('task-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const taskForm = document.getElementById('task-form');
+        const taskTitleInput = document.getElementById('task-title');
+        const taskIdInput = document.getElementById('task-id');
+        const taskCategorySelect = document.getElementById('task-category');
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationCount = document.getElementById('notification-count');
+        const notificationDropdown = document.getElementById('notification-dropdown');
+        const notificationList = document.getElementById('notification-list');
+        const globalSearchInput = document.getElementById('global-search');
+
+        // Functions for Local Storage
+        function saveData() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('categories', JSON.stringify(categories));
+            localStorage.setItem('settings', JSON.stringify(settings));
+        }
+
+        function loadData() {
+            const savedTasks = localStorage.getItem('tasks');
+            const savedCategories = localStorage.getItem('categories');
+            const savedSettings = localStorage.getItem('settings');
+
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+            } else {
+                tasks = getDemoTasks();
+            }
+
+            if (savedCategories) {
+                categories = JSON.parse(savedCategories);
+            }
+
+            if (savedSettings) {
+                settings = JSON.parse(savedSettings);
+            }
+        }
+
+        function getDemoTasks() {
+            return [
+                { id: 't1', title: 'Update Q3 Marketing Report', description: 'Review and finalize the Q3 marketing performance report for key stakeholders.', vendor: 'MarketGenius Agency', category: 'Marketing', priority: 'high', deadline: '2025-08-15', status: 'pending', created: '2025-08-01' },
+                { id: 't2', title: 'Develop new API endpoint', description: 'Create a new API endpoint for the vendor portal to handle task updates.', vendor: 'DevSolutions Inc.', category: 'Development', priority: 'high', deadline: '2025-08-20', status: 'in-progress', created: '2025-08-05' },
+                { id: 't3', title: 'Process August invoices', description: 'Approve and process all vendor invoices for the month of August.', vendor: 'Various', category: 'Finance', priority: 'medium', deadline: '2025-08-25', status: 'pending', created: '2025-08-08' },
+                { id: 't4', title: 'Complete onboarding for new vendor', description: 'Finalize the onboarding process for new vendor "Innovate Tech".', vendor: 'Innovate Tech', category: 'Operations', priority: 'low', deadline: '2025-08-30', status: 'completed', created: '2025-08-10' },
+                { id: 't5', title: 'Deploy website updates', description: 'Push new UI/UX changes to the production website environment.', vendor: 'DevSolutions Inc.', category: 'Development', priority: 'medium', deadline: '2025-08-12', status: 'in-progress', created: '2025-08-11' }
+            ];
+        }
+
+        // Sidebar & Navigation
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContentArea.classList.toggle('expanded');
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(nav => nav.classList.remove('active-link'));
+                item.classList.add('active-link');
+                const section = item.dataset.section;
+                loadSection(section);
+            });
+        });
+
+        function loadSection(section) {
+            let contentHtml = '';
+            let filteredTasks = [];
+            const currentDate = new Date().toISOString().slice(0, 10);
             
-            // Trigger confetti on celebration slide
-            if (n === 2) {
-                createConfetti();
+            switch (section) {
+                case 'dashboard':
+                    contentHtml = renderDashboard();
+                    break;
+                case 'all-tasks':
+                    contentHtml = renderTasks('all');
+                    break;
+                case 'pending-tasks':
+                    contentHtml = renderTasks('pending');
+                    break;
+                case 'in-progress':
+                    contentHtml = renderTasks('in-progress');
+                    break;
+                case 'completed-tasks':
+                    contentHtml = renderTasks('completed');
+                    break;
+                case 'categories':
+                    contentHtml = renderCategories();
+                    break;
+                case 'calendar':
+                    contentHtml = renderCalendar();
+                    break;
+                case 'reports':
+                    contentHtml = renderReports();
+                    break;
+                case 'settings':
+                    contentHtml = renderSettings();
+                    break;
+                default:
+                    contentHtml = `
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h2 class="text-xl font-bold text-white">404 - Not Found</h2>
+                            <p class="mt-2 text-gray-400">The requested section could not be found.</p>
+                        </div>
+                    `;
+            }
+            contentContainer.innerHTML = contentHtml;
+            // Re-attach event listeners for newly rendered content
+            attachEventListenersToContent();
+        }
+        
+        function attachEventListenersToContent() {
+            // Check if task tables exist and add listeners
+            const taskTableBody = document.getElementById('task-table-body');
+            if (taskTableBody) {
+                taskTableBody.addEventListener('click', handleTaskActions);
+            }
+            // Check for add new task button
+            const addTaskBtn = document.getElementById('add-new-task-btn');
+            if (addTaskBtn) {
+                addTaskBtn.addEventListener('click', () => openModal());
+            }
+            // Check for category-specific listeners
+            const newCategoryBtn = document.getElementById('add-new-category-btn');
+            if (newCategoryBtn) {
+                newCategoryBtn.addEventListener('click', addNewCategory);
+            }
+            // Calendar
+            const calendarView = document.getElementById('calendar-view');
+            if(calendarView) {
+                calendarView.addEventListener('click', handleCalendarClick);
+                document.getElementById('prev-month').addEventListener('click', () => changeMonth(-1));
+                document.getElementById('next-month').addEventListener('click', () => changeMonth(1));
+            }
+             // Reports
+             if (document.getElementById('reports-container')) {
+                 renderMockCharts();
+             }
+             // Settings
+             const themeToggleBtn = document.getElementById('theme-toggle-btn');
+             const notificationToggleBtn = document.getElementById('notification-toggle-btn');
+             const resetDataBtn = document.getElementById('reset-data-btn');
+             if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+             if (notificationToggleBtn) notificationToggleBtn.addEventListener('click', toggleNotificationSound);
+             if (resetDataBtn) resetDataBtn.addEventListener('click', resetData);
+        }
+
+        // Section Rendering Functions
+        function renderDashboard() {
+            const totalTasks = tasks.length;
+            const pendingTasks = tasks.filter(t => t.status === 'pending').length;
+            const inProgressTasks = tasks.filter(t => t.status === 'in-progress').length;
+            const completedTasks = tasks.filter(t => t.status === 'completed').length;
+            const overdueTasks = tasks.filter(t => t.status !== 'completed' && new Date(t.deadline) < new Date()).length;
+            
+            // Progress bar calculation
+            const progress = totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0;
+
+            // Upcoming deadlines (next 7 days)
+            const today = new Date();
+            const oneWeekFromNow = new Date();
+            oneWeekFromNow.setDate(today.getDate() + 7);
+            
+            const upcomingTasks = tasks.filter(t => {
+                const deadlineDate = new Date(t.deadline);
+                return t.status !== 'completed' && deadlineDate >= today && deadlineDate <= oneWeekFromNow;
+            }).sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+            const upcomingList = upcomingTasks.map(t => `
+                <li class="bg-gray-700 p-4 rounded-lg flex items-center justify-between shadow-md">
+                    <div>
+                        <h4 class="font-semibold text-white">${t.title}</h4>
+                        <p class="text-xs text-gray-400">Vendor: ${t.vendor || 'N/A'}</p>
+                    </div>
+                    <span class="text-sm font-medium text-blue-400">${t.deadline}</span>
+                </li>
+            `).join('');
+
+            return `
+                <h1 class="text-3xl font-bold text-white mb-6">Dashboard</h1>
+                
+                <!-- Summary Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    ${renderSummaryCard('Total Tasks', totalTasks, 'fas fa-list', 'from-blue-500 to-purple-600')}
+                    ${renderSummaryCard('Pending Tasks', pendingTasks, 'fas fa-hourglass-half', 'from-yellow-500 to-orange-500')}
+                    ${renderSummaryCard('In Progress', inProgressTasks, 'fas fa-spinner', 'from-indigo-500 to-pink-500')}
+                    ${renderSummaryCard('Completed', completedTasks, 'fas fa-check-circle', 'from-green-500 to-teal-500')}
+                </div>
+
+                <!-- Progress Bar & Upcoming Deadlines -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Overall Progress</h3>
+                        <div class="w-full h-8 bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full gradient-bg transition-all duration-500 ease-out" style="width: ${progress}%"></div>
+                        </div>
+                        <p class="text-center mt-2 text-sm text-gray-400">${progress}% completed</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Upcoming Deadlines <span class="text-sm text-yellow-400">(${overdueTasks} overdue)</span></h3>
+                        <ul class="space-y-4 max-h-60 overflow-y-auto scrollbar-thin">
+                            ${upcomingList.length > 0 ? upcomingList : `<li class="text-gray-400">No upcoming tasks in the next 7 days.</li>`}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSummaryCard(title, value, icon, gradient) {
+            return `
+                <div class="p-6 rounded-xl shadow-lg text-white ${gradient}">
+                    <div class="flex items-center justify-between">
+                        <div class="text-2xl font-bold">${value}</div>
+                        <i class="${icon} text-3xl opacity-50"></i>
+                    </div>
+                    <div class="text-sm mt-1">${title}</div>
+                </div>
+            `;
+        }
+        
+        function renderTasks(filterStatus) {
+            let filteredTasks = tasks.filter(t => t.status === filterStatus || filterStatus === 'all');
+            
+            const taskRows = filteredTasks.map(t => {
+                const isOverdue = new Date(t.deadline) < new Date() && t.status !== 'completed';
+                const rowClass = isOverdue ? 'overdue-task' : 'bg-gray-800';
+                return `
+                    <tr class="${rowClass} border-b border-gray-700">
+                        <td class="p-4 rounded-l-lg">${t.title}</td>
+                        <td class="p-4">${t.vendor || 'N/A'}</td>
+                        <td class="p-4"><span class="bg-blue-600 text-white px-3 py-1 rounded-full text-xs">${t.category}</span></td>
+                        <td class="p-4"><span class="px-3 py-1 rounded-full text-xs text-white task-priority-${t.priority}">${t.priority}</span></td>
+                        <td class="p-4">${t.deadline}</td>
+                        <td class="p-4">
+                            <span class="px-3 py-1 rounded-full text-xs text-white ${getStatusColor(t.status)}">${t.status}</span>
+                        </td>
+                        <td class="p-4 rounded-r-lg">
+                            <div class="flex items-center space-x-2">
+                                <button class="action-btn text-green-500 hover:text-green-400" data-id="${t.id}" data-action="toggle-status" title="Toggle Status"><i class="fas fa-sync"></i></button>
+                                <button class="action-btn text-blue-500 hover:text-blue-400" data-id="${t.id}" data-action="edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn text-red-500 hover:text-red-400" data-id="${t.id}" data-action="delete" title="Delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-white">${filterStatus.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h1>
+                    <button id="add-new-task-btn" class="gradient-bg text-white py-2 px-4 rounded-lg text-sm font-medium hover:scale-105 transition-transform duration-200">
+                        <i class="fas fa-plus mr-2"></i> Add New Task
+                    </button>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-700">
+                        <thead class="bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider rounded-l-lg">Title</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Vendor</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Category</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Priority</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Deadline</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider rounded-r-lg">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="task-table-body" class="divide-y divide-gray-700">
+                            ${taskRows.length > 0 ? taskRows : `<tr><td colspan="7" class="p-4 text-center text-gray-400">No tasks found.</td></tr>`}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function getStatusColor(status) {
+            switch (status) {
+                case 'pending': return 'bg-yellow-600';
+                case 'in-progress': return 'bg-blue-600';
+                case 'completed': return 'bg-green-600';
+                default: return 'bg-gray-600';
+            }
+        }
+
+        function handleTaskActions(e) {
+            const btn = e.target.closest('.action-btn');
+            if (!btn) return;
+            
+            const taskId = btn.dataset.id;
+            const action = btn.dataset.action;
+
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex === -1) return;
+            const task = tasks[taskIndex];
+
+            switch (action) {
+                case 'toggle-status':
+                    task.status = task.status === 'completed' ? 'pending' : 'completed';
+                    showToast(`Task "${task.title}" status toggled.`);
+                    break;
+                case 'edit':
+                    openModal(task);
+                    return; // Prevent reload
+                case 'delete':
+                    if (confirm(`Are you sure you want to delete the task "${task.title}"?`)) {
+                        tasks.splice(taskIndex, 1);
+                        showToast(`Task "${task.title}" deleted.`);
+                    } else {
+                        return; // Prevent reload
+                    }
+                    break;
+            }
+            saveData();
+            loadSection(document.querySelector('.active-link').dataset.section);
+        }
+
+        function renderCategories() {
+             const categoryCounts = categories.reduce((acc, cat) => {
+                acc[cat] = tasks.filter(t => t.category === cat).length;
+                return acc;
+            }, {});
+
+            const categoryList = categories.map(cat => `
+                <li class="bg-gray-700 p-4 rounded-lg flex items-center justify-between shadow-md">
+                    <span class="font-semibold text-white">${cat}</span>
+                    <span class="bg-gray-600 text-white px-3 py-1 rounded-full text-xs">${categoryCounts[cat]} tasks</span>
+                </li>
+            `).join('');
+
+            return `
+                <h1 class="text-3xl font-bold text-white mb-6">Categories</h1>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white">Current Categories</h3>
+                        <button id="add-new-category-btn" class="gradient-bg text-white py-2 px-4 rounded-lg text-sm font-medium hover:scale-105 transition-transform duration-200">
+                            <i class="fas fa-plus mr-2"></i> Add New Category
+                        </button>
+                    </div>
+                    <ul class="space-y-4">
+                        ${categoryList.length > 0 ? categoryList : `<li class="text-gray-400">No categories found.</li>`}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function addNewCategory() {
+            const newCategory = prompt("Enter a new category name:");
+            if (newCategory && newCategory.trim() !== '') {
+                categories.push(newCategory.trim());
+                saveData();
+                loadSection('categories');
+                showToast(`Category "${newCategory.trim()}" added.`);
+            }
+        }
+
+        // Calendar View
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function renderCalendar() {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date().toISOString().slice(0, 10);
+            
+            let calendarDays = '';
+            for (let i = 0; i < firstDay; i++) {
+                calendarDays += `<div class="calendar-day text-gray-600"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayTasks = tasks.filter(t => t.deadline === dateStr);
+                const hasTasks = dayTasks.length > 0;
+                const isToday = dateStr === today;
+                
+                const taskBadges = hasTasks ? dayTasks.map(t => `<span class="h-2 w-2 rounded-full ${getStatusColor(t.status)}"></span>`).join('') : '';
+
+                calendarDays += `
+                    <div class="calendar-day p-2 text-center rounded-lg relative cursor-pointer hover:bg-gray-700 transition-colors duration-200 ${isToday ? 'bg-blue-600 text-white' : ''}" data-date="${dateStr}">
+                        <div class="font-bold">${day}</div>
+                        <div class="flex justify-center space-x-1 mt-1">
+                            ${taskBadges}
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <h1 class="text-3xl font-bold text-white mb-6">Calendar View</h1>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <button id="prev-month" class="text-blue-400 hover:text-blue-300"><i class="fas fa-chevron-left"></i></button>
+                        <h2 class="text-xl font-bold text-white">${monthNames[currentMonth]} ${currentYear}</h2>
+                        <button id="next-month" class="text-blue-400 hover:text-blue-300"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div id="calendar-view" class="grid grid-cols-7 gap-2 text-sm text-gray-400">
+                        <div class="font-bold text-center">Sun</div>
+                        <div class="font-bold text-center">Mon</div>
+                        <div class="font-bold text-center">Tue</div>
+                        <div class="font-bold text-center">Wed</div>
+                        <div class="font-bold text-center">Thu</div>
+                        <div class="font-bold text-center">Fri</div>
+                        <div class="font-bold text-center">Sat</div>
+                        ${calendarDays}
+                    </div>
+                    <div id="calendar-task-list" class="mt-6 space-y-2">
+                        <h3 class="text-lg font-bold text-white">Tasks for Today</h3>
+                        ${renderDailyTasks(today)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            loadSection('calendar');
+        }
+
+        function handleCalendarClick(e) {
+            const dayElement = e.target.closest('.calendar-day');
+            if (dayElement) {
+                const date = dayElement.dataset.date;
+                const taskListContainer = document.getElementById('calendar-task-list');
+                taskListContainer.innerHTML = `<h3 class="text-lg font-bold text-white">Tasks for ${date}</h3>` + renderDailyTasks(date);
             }
         }
         
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            showSlide(currentSlide);
+        function renderDailyTasks(date) {
+            const dailyTasks = tasks.filter(t => t.deadline === date);
+            if (dailyTasks.length === 0) {
+                return `<p class="text-gray-400 text-sm">No tasks for this date.</p>`;
+            }
+            return `<ul class="space-y-2">` + dailyTasks.map(t => `
+                <li class="bg-gray-700 p-3 rounded-lg flex justify-between items-center text-sm">
+                    <span class="font-semibold text-white">${t.title}</span>
+                    <span class="px-2 py-1 rounded-full text-xs text-white ${getStatusColor(t.status)}">${t.status}</span>
+                </li>
+            `).join('') + `</ul>`;
         }
-        
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(currentSlide);
+
+        function renderReports() {
+            return `
+                <h1 class="text-3xl font-bold text-white mb-6">Reports & Analytics</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="reports-container">
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Category Distribution</h3>
+                        <canvas id="category-chart" class="w-full h-72"></canvas>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Monthly Task Trends</h3>
+                        <canvas id="monthly-chart" class="w-full h-72"></canvas>
+                    </div>
+                </div>
+            `;
         }
-        
-        function createConfetti() {
-            const container = document.getElementById('confetti-container');
-            container.innerHTML = '';
-            
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = `${Math.random() * 100}%`;
-                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                container.appendChild(confetti);
+
+        function renderMockCharts() {
+            // This is a simple mock-up for demonstration. A real charting library would be used.
+            const categoryChart = document.getElementById('category-chart');
+            if (categoryChart) {
+                const ctx = categoryChart.getContext('2d');
+                ctx.clearRect(0, 0, categoryChart.width, categoryChart.height);
+                ctx.font = "14px Inter";
+                ctx.fillStyle = "#d1d5db";
+                ctx.fillText("Mock Pie Chart for Category Distribution", 10, 20);
+                ctx.fillText("(Requires a charting library like Chart.js)", 10, 40);
+                ctx.fillText("Total: 5 tasks", 10, 60);
+                ctx.fillText("Marketing: 1", 10, 80);
+                ctx.fillText("Development: 2", 10, 100);
+                ctx.fillText("Finance: 1", 10, 120);
+                ctx.fillText("Operations: 1", 10, 140);
+            }
+            const monthlyChart = document.getElementById('monthly-chart');
+            if (monthlyChart) {
+                const ctx = monthlyChart.getContext('2d');
+                ctx.clearRect(0, 0, monthlyChart.width, monthlyChart.height);
+                ctx.font = "14px Inter";
+                ctx.fillStyle = "#d1d5db";
+                ctx.fillText("Mock Bar Chart for Monthly Trends", 10, 20);
+                ctx.fillText("(Requires a charting library like Chart.js)", 10, 40);
             }
         }
         
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                nextSlide();
-            } else if (e.key === 'ArrowLeft') {
-                prevSlide();
+        function renderSettings() {
+            return `
+                <h1 class="text-3xl font-bold text-white mb-6">Settings</h1>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg space-y-4">
+                    <div class="flex justify-between items-center p-4 bg-gray-700 rounded-lg">
+                        <span class="font-semibold text-white">Theme Color</span>
+                        <button id="theme-toggle-btn" class="py-2 px-4 rounded-lg text-sm font-medium ${settings.theme === 'dark' ? 'gradient-bg text-white' : 'bg-gray-600 text-gray-300'}">
+                            ${settings.theme === 'dark' ? 'Dark Theme' : 'Light Theme (Disabled)'}
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-700 rounded-lg">
+                        <span class="font-semibold text-white">Notification Sound</span>
+                        <button id="notification-toggle-btn" class="py-2 px-4 rounded-lg text-sm font-medium ${settings.notificationSound ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}">
+                            ${settings.notificationSound ? 'On' : 'Off'}
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-700 rounded-lg">
+                        <span class="font-semibold text-white">Reset Application Data</span>
+                        <button id="reset-data-btn" class="bg-red-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:scale-105 transition-transform duration-200">
+                            Reset Data
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleTheme() {
+            // This is a mock implementation for a dark theme toggle.
+            // Full implementation would require a light theme CSS file or more complex Tailwind config.
+            showToast("Theme toggle is a mock feature in this demo.");
+        }
+
+        function toggleNotificationSound() {
+            settings.notificationSound = !settings.notificationSound;
+            saveData();
+            loadSection('settings');
+            showToast(`Notification sound is now ${settings.notificationSound ? 'ON' : 'OFF'}.`);
+        }
+
+        function resetData() {
+            if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        }
+
+        // Modal Functions
+        function openModal(task = null) {
+            populateCategoryDropdown();
+            taskForm.reset();
+            if (task) {
+                modalTitle.textContent = "Edit Task";
+                taskIdInput.value = task.id;
+                taskTitleInput.value = task.title;
+                document.getElementById('task-description').value = task.description;
+                document.getElementById('task-vendor').value = task.vendor;
+                document.getElementById('task-category').value = task.category;
+                document.getElementById('task-priority').value = task.priority;
+                document.getElementById('task-deadline').value = task.deadline;
+                document.getElementById('task-status').value = task.status;
+            } else {
+                modalTitle.textContent = "Add New Task";
+                taskIdInput.value = '';
+            }
+            taskModal.classList.remove('hidden');
+            // Animate in
+            setTimeout(() => {
+                taskModal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+            }, 50);
+        }
+
+        function closeModal() {
+            // Animate out
+            taskModal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                taskModal.classList.add('hidden');
+            }, 300);
+        }
+        
+        function populateCategoryDropdown() {
+            taskCategorySelect.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        }
+
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const taskId = taskIdInput.value;
+            const newTask = {
+                title: taskTitleInput.value,
+                description: document.getElementById('task-description').value,
+                vendor: document.getElementById('task-vendor').value,
+                category: document.getElementById('task-category').value,
+                priority: document.getElementById('task-priority').value,
+                deadline: document.getElementById('task-deadline').value,
+                status: document.getElementById('task-status').value,
+                created: new Date().toISOString().slice(0, 10),
+                id: taskId || `t${Date.now()}`
+            };
+
+            if (taskId) {
+                // Edit existing task
+                const taskIndex = tasks.findIndex(t => t.id === taskId);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = { ...tasks[taskIndex], ...newTask };
+                    showToast(`Task "${newTask.title}" updated successfully.`);
+                }
+            } else {
+                // Add new task
+                tasks.unshift(newTask);
+                showToast(`Task "${newTask.title}" added successfully.`);
+            }
+            
+            saveData();
+            closeModal();
+            loadSection(document.querySelector('.active-link').dataset.section);
+        });
+
+        // Notifications
+        function checkDeadlines() {
+            const today = new Date().toISOString().slice(0, 10);
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+
+            const upcomingDeadlines = tasks.filter(t => 
+                t.status !== 'completed' && (t.deadline === today || t.deadline === tomorrowStr)
+            );
+            
+            const notificationCountElement = document.getElementById('notification-count');
+            const notificationListElement = document.getElementById('notification-list');
+
+            if (upcomingDeadlines.length > 0) {
+                notificationCountElement.textContent = upcomingDeadlines.length;
+                notificationCountElement.classList.remove('hidden');
+                
+                notificationListElement.innerHTML = upcomingDeadlines.map(t => {
+                    const time = t.deadline === today ? 'due today' : 'due tomorrow';
+                    return `
+                        <li class="px-4 py-2 text-sm text-gray-300 border-b border-gray-600 last:border-0">
+                            <span class="font-semibold text-white">${t.title}</span> is ${time}.
+                        </li>
+                    `;
+                }).join('');
+            } else {
+                notificationCountElement.classList.add('hidden');
+                notificationListElement.innerHTML = `<li class="px-4 py-2 text-sm text-gray-400">No new notifications.</li>`;
+            }
+        }
+
+        notificationBell.addEventListener('click', () => {
+            const isVisible = notificationDropdown.classList.contains('scale-100');
+            if (isVisible) {
+                notificationDropdown.classList.remove('scale-100', 'opacity-100', 'visible');
+                notificationDropdown.classList.add('scale-95', 'opacity-0', 'invisible');
+            } else {
+                notificationDropdown.classList.remove('scale-95', 'opacity-0', 'invisible');
+                notificationDropdown.classList.add('scale-100', 'opacity-100', 'visible');
             }
         });
-        
-        // Auto-advance every 10 seconds
-        setInterval(() => {
-            nextSlide();
-        }, 10000);
+
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                 notificationDropdown.classList.remove('scale-100', 'opacity-100', 'visible');
+                 notificationDropdown.classList.add('scale-95', 'opacity-0', 'invisible');
+            }
+        });
+
+        // Search & Filter
+        globalSearchInput.addEventListener('input', () => {
+            const query = globalSearchInput.value.toLowerCase();
+            const currentSection = document.querySelector('.active-link').dataset.section;
+            let currentTasks = tasks.filter(t => t.status === currentSection.replace('-tasks', '') || currentSection === 'all-tasks');
+            
+            const filteredTasks = currentTasks.filter(t => 
+                t.title.toLowerCase().includes(query) ||
+                t.vendor.toLowerCase().includes(query) ||
+                t.category.toLowerCase().includes(query)
+            );
+            
+            // This is a simple implementation. In a real app, we'd rebuild the table with filtered data.
+            // For this demo, we'll just log it.
+            console.log('Search Results:', filteredTasks);
+            // Re-render current section with filtered tasks (this requires a modification to renderTasks)
+            // A more robust solution would be to pass the filtered list to the rendering function.
+        });
+
+        // Toast Notifications
+        function showToast(message) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-gray-900 text-white p-4 rounded-xl shadow-lg flex items-center space-x-3 transform transition-all duration-300 translate-x-full opacity-0';
+            toast.innerHTML = `
+                <i class="fas fa-info-circle text-blue-400"></i>
+                <span class="text-sm">${message}</span>
+            `;
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Initial Load
+        window.addEventListener('load', () => {
+            loadData();
+            loadSection('dashboard');
+            checkDeadlines();
+            saveData();
+            // In a real app, you'd use a more robust interval check for notifications
+            setInterval(checkDeadlines, 60000); // Check every minute
+        });
     </script>
 </body>
 </html>
